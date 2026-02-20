@@ -1,0 +1,3632 @@
+/* Importação de Fontes */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+
+/* Base */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background-color: #f4f7fa;
+    color: #333;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+/* Layout Principal da Aplicação */
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px; /* Largura padrão expandida */
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-shrink: 0;
+    transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
+    overflow: hidden; /* Importante para esconder o texto quando a largura é menor */
+}
+
+/* Estilos para o estado recolhido da sidebar */
+.sidebar.collapsed {
+    width: 80px; /* A sidebar encolherá para 80px (mostrando apenas ícones) */
+    padding: 20px 0; /* Mantém o padding vertical, ajustado para não ter padding horizontal grande */
+}
+
+.sidebar-header {
+    text-align: center;
+    padding: 15px 0 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.6em;
+    color: #3498db;
+    font-weight: 700;
+    transition: font-size 0.3s ease-in-out;
+}
+
+.sidebar-subtitle {
+    font-size: 0.9em;
+    color: #bdc3c7;
+    display: block;
+    opacity: 1; /* Inicia visível */
+    transition: opacity 0.3s ease-in-out;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 5px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 1em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    border-left: 5px solid transparent;
+}
+
+.sidebar-nav a i {
+    margin-right: 15px;
+    font-size: 1.1em;
+    transition: margin-right 0.3s ease-in-out; /* Transição para o ícone */
+}
+
+.sidebar-nav-text {
+    opacity: 1;
+    white-space: nowrap;
+    overflow: hidden; /* Esconde o texto quando a largura é 0 */
+    flex-grow: 1;
+    transition: opacity 0.3s ease-in-out, width 0.3s ease-in-out; /* Transição para sumir/aparecer */
+    width: auto; /* Garante que a largura se adapte ao conteúdo */
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background-color: #34495e;
+    color: #ffffff;
+    border-left-color: #3498db;
+}
+
+.sidebar-footer {
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto;
+}
+
+.sidebar-logout-btn {
+    background: none;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    width: auto;
+    display: inline-flex;
+    align-items: center;
+}
+
+.sidebar-logout-btn i {
+    margin-right: 8px;
+}
+
+.sidebar-logout-btn:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/* Conteúdo Principal */
+.main-content-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* MainHeader */
+.main-header {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.main-header h1 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin: 0;
+    font-weight: 500;
+    flex-grow: 1;
+    padding-left: 50px; /* Adiciona padding para garantir que o título não sobreponha o botão */
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle-btn {
+    background-color: #3498db; /* Fundo azul para maior visibilidade */
+    color: white; /* Cor do ícone branco */
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 45px;
+    min-height: 45px;
+    box-sizing: border-box;
+
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.content-area {
+    padding: 30px;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.dashboard-content {
+    /* REMOVA ou COMENTE esta linha que está causando o erro */
+    /* display: block; */ 
+    width: 100%;
+    padding: 0;
+}
+
+
+/* Common Card/Section Styles */
+.form, .lista, .dashboard, .report-section {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9edf2;
+    height: fit-content;
+}
+
+/* Headings within sections */
+.form h2, .lista h2, .dashboard h2, .dashboard h3, .report-section h2, .report-section h3 {
+    color: #34495e;
+    font-size: 1.5em;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ecf0f1;
+    padding-bottom: 10px;
+    font-weight: 600;
+}
+
+.dashboard h3, .report-section h3 {
+    font-size: 1.2em;
+    margin-top: 20px;
+    border-bottom: none;
+    padding-bottom: 0;
+    color: #4a69bd;
+    font-weight: 500;
+}
+
+/* Input/Select Styles */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select {
+    display: block;
+    width: calc(100% - 28px);
+    margin-bottom: 18px;
+    padding: 14px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    font-size: 1.0em;
+    color: #333;
+    background-color: #fcfdfe;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+input::placeholder {
+    color: #95a5a6;
+    font-style: italic;
+    font-weight: 300;
+}
+
+input:focus, select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+    background-color: #ffffff;
+    outline: none;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg) brightness(0.8);
+    cursor: pointer;
+}
+
+/* Input with Icons */
+.input-with-icon {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.input-with-icon input,
+.input-with-icon select {
+    padding-right: 45px;
+    margin-bottom: 0;
+}
+
+.icon-inside-input {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+    pointer-events: none;
+    font-size: 1.1em;
+}
+
+input[type="date"].no-calendar-icon::-webkit-calendar-picker-indicator {
+    display: none;
+}
+input[type="date"].no-calendar-icon {
+    padding-right: 14px;
+}
+
+/* Form Buttons */
+.form button[type="submit"],
+.form button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.form button[type="submit"]:hover,
+.form button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+/* List Styles */
+.lista ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lista li {
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 12px 18px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95em;
+    color: #444;
+    transition: box-shadow 0.1s ease, transform 0.1s ease;
+}
+
+.lista li:hover {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+}
+
+.lista li button {
+    background: none;
+    border: none;
+    color: #7f8c8d;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-left: 8px;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    width: auto;
+    display: inline-block;
+}
+
+.lista li button:hover {
+    color: #34495e;
+    background-color: #eef2f5;
+}
+
+.lista li button:last-child {
+    color: #dc3545;
+}
+
+.lista li button:last-child:hover {
+    background-color: #f8d7da;
+    color: #a71d2a;
+}
+
+.lista li button:first-of-type {
+    color: #007bff;
+}
+
+.lista li button:first-of-type:hover {
+    background-color: #e0f0ff;
+    color: #0056b3;
+}
+
+
+/* Dashboard Summary Cards */
+.dashboard-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e9edf2;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.summary-card h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #555;
+    font-weight: 500;
+}
+
+.summary-card .value {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+.summary-card .description {
+    font-size: 0.8em;
+    color: #777;
+}
+
+.summary-card.receber .value, .summary-card.entradas .value {
+    color: #28a745;
+}
+.summary-card.pagar .value, .summary-card.saidas .value {
+    color: #dc3545;
+}
+.summary-card.saldo .value {
+    color: #007bff;
+}
+
+.summary-card .icon {
+    font-size: 2.2em;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+}
+.summary-card.receber .icon { background-color: rgba(40, 167, 69, 0.1); color: #28a745; }
+.summary-card.pagar .icon { background-color: rgba(220, 53, 69, 0.1); color: #dc3545; }
+.summary-card.saldo .icon { background-color: rgba(0, 123, 255, 0.1); color: #007bff; }
+
+
+/* Accounts Payable/Receivable */
+.contas-a-pagar-receber {
+    margin-top: 30px;
+    background-color: #fdfdfd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #e9edf2;
+}
+
+.contas-a-pagar-receber h3 {
+    color: #34495e;
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    font-weight: 600;
+}
+
+.contas-list {
+    display: flex;
+    gap: 20px;
+}
+
+.contas-list > div {
+    flex: 1;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+}
+
+.contas-list h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #4a69bd;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.contas-list h4 i {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.contas-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.contas-list li {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 5px 0;
+    margin-bottom: 3px;
+    font-size: 0.9em;
+    color: #666;
+}
+.contas-list li strong {
+    color: #333;
+}
+.contas-list .total {
+    font-weight: 700;
+    font-size: 1.1em;
+    margin-top: 10px;
+    border-top: 1px dashed #ccc;
+    padding-top: 10px;
+    color: #2c3e50;
+}
+
+
+/* Recharts */
+.recharts-responsive-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #e9edf2;
+}
+
+/* Report Tables */
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.report-table th, .report-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 0.9em;
+    color: #444;
+}
+
+.report-table th {
+    background-color: #f0f4f8;
+    color: #34495e;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+}
+
+.report-table tbody tr:nth-child(even) {
+    background-color: #f9fbfc;
+}
+
+.report-table tbody tr:hover {
+    background-color: #eef2f5;
+}
+
+.report-table .value-income {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.report-table .value-expense {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+.report-table .total-row td {
+    background-color: #e9edf2;
+    font-weight: 600;
+    font-size: 1em;
+    border-top: 2px solid #bdc3c7;
+}
+
+.report-table .total-balance td {
+    background-color: #dbe9f5;
+    font-size: 1.1em;
+    color: #2c3e50;
+}
+
+.report-output p {
+    text-align: center;
+    color: #777;
+    margin-top: 30px;
+    font-style: italic;
+}
+
+
+/* Login and Register Forms */
+.login-register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #eef2f5;
+}
+
+.login-register-form {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-register-form h2 {
+    font-size: 2em;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.login-register-form input {
+    margin-bottom: 20px;
+    padding: 12px;
+    font-size: 1em;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    width: calc(100% - 24px);
+}
+
+.login-register-form button {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    width: 100%;
+}
+
+.login-register-form button:hover {
+    background-color: #2980b9;
+}
+
+
+/* === Estilos para a Sidebar Recolhida (via JS Toggle) === */
+
+.app-layout.sidebar-collapsed .sidebar {
+    width: 80px; /* Sidebar encolherá para 80px (ícones visíveis) */
+    padding: 20px 0; /* Mantém padding vertical */
+}
+
+/* Esconde os textos da sidebar quando recolhida (usando opacidade e width: 0 para transição suave) */
+.sidebar.collapsed .sidebar-subtitle,
+.sidebar.collapsed .sidebar-nav-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+/* Quando NÃO está colapsado, o texto deve aparecer sem delay */
+.sidebar:not(.collapsed) .sidebar-subtitle,
+.sidebar:not(.collapsed) .sidebar-nav-text {
+    opacity: 1;
+    width: auto;
+    transition: opacity 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+
+/* Ajusta o espaçamento do ícone quando o texto some */
+.sidebar.collapsed .sidebar-nav a i {
+    margin-right: 0; /* Remove a margem à direita do ícone */
+}
+
+/* Centraliza os itens de navegação e o botão de logout na sidebar recolhida */
+.sidebar.collapsed .sidebar-nav a,
+.sidebar.collapsed .sidebar-logout-btn {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Ajusta o título do cabeçalho da sidebar quando recolhida */
+.sidebar.collapsed .sidebar-header h3 {
+    font-size: 1.2em;
+    text-align: center;
+}
+
+
+/* --- Media Queries --- */
+
+/* Em telas menores ou iguais a 992px: Sidebar permanentemente recolhida (ícones apenas) */
+/* O comportamento do botão de toggle será mais notável em telas maiores que 992px */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 80px; /* Sidebar fica sempre recolhida visualmente */
+    }
+    .sidebar-header h3 {
+        font-size: 1.2em;
+    }
+    .sidebar-subtitle, /* Oculta o subtítulo */
+    .sidebar-nav-text { /* Oculta o texto dos itens */
+        display: none; /* Display none é mais definitivo para esta breakpoint */
+    }
+    .sidebar-nav a {
+        justify-content: center;
+        padding: 12px 0;
+    }
+    .sidebar-nav a i {
+        margin-right: 0;
+    }
+    .sidebar-logout-btn {
+        justify-content: center;
+        padding: 10px 0;
+    }
+    .main-header {
+        justify-content: flex-start;
+    }
+}
+
+/* Em telas menores ou iguais a 768px: Sidebar no topo, itens na horizontal */
+@media (max-width: 768px) {
+    .app-layout {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 10px 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        border-bottom: 1px solid #e0e0e0;
+    }
+    .sidebar-header, .sidebar-footer {
+        display: none;
+    }
+    .sidebar-nav {
+        flex-grow: 1;
+    }
+    .sidebar-nav ul {
+        display: flex;
+        justify-content: space-around;
+    }
+    .sidebar-nav a {
+        padding: 8px 10px;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+    }
+    .sidebar-nav a:hover, .sidebar-nav a.active {
+        border-bottom-color: #3498db;
+        background-color: transparent;
+    }
+    .main-content-wrapper {
+        margin-left: 0;
+    }
+    .contas-list {
+        flex-direction: column;
+    }
+    .login-register-form {
+        margin: 20px;
+    }
+    .main-header {
+        justify-content: flex-start;
+        gap: 15px;
+    }
+    .main-header h1 {
+        font-size: 1.5em;
+    }
+    .sidebar-subtitle,
+    .sidebar-nav-text {
+        display: none; /* Em telas muito pequenas, use display: none */
+    }
+}
+/* Estilo básico para textarea, similar aos inputs */
+textarea {
+    display: block;
+    width: calc(100% - 28px);
+    margin-bottom: 18px;
+    padding: 14px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    font-size: 1.0em;
+    color: #333;
+    background-color: #fcfdfe;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-sizing: border-box;
+    resize: vertical; /* Permite redimensionar verticalmente */
+    min-height: 80px; /* Altura mínima para o textarea */
+}
+
+textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+    background-color: #ffffff;
+    outline: none;
+}
+
+/* Estilo para o botão Cancelar */
+.cancel-btn {
+    background-color: #6c757d; /* Cinza para cancelar */
+    margin-top: 5px; /* Pequena margem superior */
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+/* MainHeader */
+.main-header {
+    background-color: #ffffff;
+    padding: 15px 30px;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+    position: relative;
+    /* Ajuste para alinhar o h1 e o month picker */
+    justify-content: space-between; /* Espalha os itens */
+}
+
+.main-header h1 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    margin: 0;
+    font-weight: 500;
+    /* Remover flex-grow para que o justify-content: space-between funcione melhor */
+    /* flex-grow: 1; */
+    padding-left: 50px; /* Mantém padding para o botão */
+    position: absolute; /* Posição absoluta para o h1 */
+    left: 50%; /* Centraliza */
+    transform: translateX(-50%); /* Ajuste fino */
+    white-space: nowrap; /* Evita quebra de linha do título */
+}
+
+/* Novo container para o seletor de mês */
+.month-picker-container {
+    margin-left: auto; /* Empurra para a direita com flexbox */
+    position: relative; /* Para manter o input com posicionamento normal */
+    z-index: 1; /* Garante que o picker esteja na frente */
+}
+
+/* Estilo específico para o input type="month" */
+.month-picker-input {
+    width: auto;
+    min-width: 180px;
+    padding: 10px 12px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #d0d7de;
+    background-color: #fcfdfe;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.month-picker-input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+    outline: none;
+}
+
+/* Classe para esconder visualmente (para acessibilidade) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ... (Restante do seu CSS existente) ... */
+
+/* Ajustes para telas menores - MainHeader e Title */
+@media (max-width: 992px) {
+    .main-header h1 {
+        padding-left: 40px; /* Ajusta padding para o botão menor */
+        font-size: 1.5em; /* Reduz tamanho do título */
+    }
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        flex-wrap: wrap; /* Permite quebrar linha se não couber */
+        justify-content: space-between; /* Espalha itens */
+    }
+    .main-header h1 {
+        position: static; /* Remove absolute positioning */
+        transform: none; /* Remove transform */
+        flex-basis: 100%; /* Ocupa linha inteira */
+        text-align: center; /* Centraliza */
+        padding-left: 0;
+        order: -1; /* Força o título a ir para o início da linha (acima do botão e picker) */
+        margin-bottom: 10px; /* Espaço abaixo do título */
+    }
+    .month-picker-container {
+        margin-left: 0; /* Remove margin-left auto */
+        width: 100%; /* Ocupa largura total */
+        text-align: center; /* Centraliza o picker */
+        margin-top: 10px; /* Espaço acima */
+    }
+    .month-picker-input {
+        width: 100%; /* Picker ocupa 100% da largura */
+        min-width: unset;
+    }
+}
+/* Estilo para o input de arquivo */
+.file-input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background-color: #fcfdfe;
+}
+
+.file-input::file-selector-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.file-input::file-selector-button:hover {
+    background-color: #2980b9;
+}
+
+/* Estilos para o status de upload */
+.upload-status {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.upload-status progress {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.upload-status progress::-webkit-progress-bar {
+    background-color: #e0e0e0;
+    border-radius: 4px;
+}
+
+.upload-status progress::-webkit-progress-value {
+    background-color: #28a745;
+    border-radius: 4px;
+}
+
+.upload-status progress::-moz-progress-bar {
+    background-color: #28a745;
+    border-radius: 4px;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.success-message {
+    color: #28a745;
+    font-size: 0.9em;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.success-message a {
+    color: #3498db;
+    text-decoration: none;
+}
+
+.success-message a:hover {
+    text-decoration: underline;
+}
+
+/* Container para as duas colunas do relatório IPB */
+.ipb-report-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Permite quebrar em telas menores */
+    justify-content: center; /* Centraliza as colunas */
+}
+
+.ipb-report-column {
+    flex: 1; /* Ocupa espaço igual */
+    min-width: 450px; /* Largura mínima para cada coluna do relatório */
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 15px;
+}
+
+.ipb-report-column h3 {
+    text-align: center;
+    color: #34495e;
+    font-size: 1.4em;
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ecf0f1;
+    padding-bottom: 10px;
+    font-weight: 600;
+}
+
+/* Estilos específicos para a tabela do relatório IPB */
+.ipb-report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.ipb-report-table th,
+.ipb-report-table td {
+    padding: 8px 10px;
+    border: 1px solid #e0e0e0; /* Bordas visíveis como na imagem */
+    text-align: left;
+}
+
+.ipb-report-table th {
+    background-color: #f0f4f8;
+    color: #34495e;
+    font-weight: bold;
+    text-align: center; /* Centraliza cabeçalhos */
+}
+
+.ipb-report-table tbody tr.category-header td {
+    background-color: #e9ecef; /* Fundo para "RECEITAS:" / "DESPESAS:" */
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Adicionado para diferenciar as linhas de dados do orçamento */
+.ipb-report-table tbody tr:nth-child(odd):not(.category-header):not(.total-row) {
+    background-color: #f9fbfc; /* Linhas zebradas para dados */
+}
+.ipb-report-table tbody tr:hover:not(.category-header):not(.total-row) {
+    background-color: #eef2f5; /* Hover em linhas de dados */
+}
+
+.ipb-report-table tbody tr.total-row td {
+    background-color: #dbe9f5; /* Fundo para linhas de total */
+    font-weight: bold;
+    border-top: 2px solid #aeb6bf;
+}
+
+/* Ajustes para células de percentual e valores */
+.ipb-report-table td:nth-child(3) { /* Coluna % */
+    text-align: right;
+    width: 15%;
+}
+.ipb-report-table td:nth-child(2), /* Coluna Valores (Movimento Financeiro) */
+.ipb-report-table td:nth-child(4) { /* Coluna Orçado / Realizado */
+    text-align: right;
+    width: 25%;
+}
+
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .ipb-report-column {
+        min-width: 100%; /* Uma coluna por linha em tablets */
+    }
+}
+/* Estilos para o grupo de checkboxes */
+.specs-checkbox-group {
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 18px;
+    background-color: #fcfdfe;
+    max-height: 200px; /* Limita a altura e adiciona scroll */
+    overflow-y: auto;
+    display: grid; /* Usa grid para alinhar os checkboxes */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Colunas automáticas */
+    gap: 8px; /* Espaço entre os checkboxes */
+}
+
+.specs-checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre o checkbox e o texto */
+    font-size: 0.95em;
+    color: #333;
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.specs-checkbox-item input[type="checkbox"] {
+    /* Reset de estilos padrão do navegador */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    /* Estilos personalizados */
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0; /* Impede que o checkbox encolha */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.specs-checkbox-item input[type="checkbox"]:checked {
+    background-color: #28a745; /* Cor verde quando marcado */
+    border-color: #28a745;
+}
+
+.specs-checkbox-item input[type="checkbox"]:checked::after {
+    content: '\2713'; /* Símbolo de check (checkmark) */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    line-height: 1;
+}
+
+.specs-checkbox-item input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+}
+
+/* Espaçamento para o label antes do grupo de checkboxes */
+.input-label-spacing {
+    display: block;
+    margin-bottom: 8px; /* Espaço entre o label e o grupo */
+    font-weight: 500;
+    color: #555;
+    font-size: 0.9em;
+}
+
+/* Mensagem quando não há especificações */
+.no-specs-message {
+    font-style: italic;
+    color: #777;
+    text-align: center;
+    padding: 10px;
+    border: 1px dashed #ccc;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    background-color: #f8f8f8;
+}
+/* Container do botão de download PDF */
+.download-pdf-container {
+    text-align: right; /* Alinha o botão à direita */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.download-pdf-btn {
+    background-color: #dc3545; /* Vermelho para PDF */
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex; /* Para alinhar o ícone e o texto */
+    align-items: center;
+    gap: 8px; /* Espaço entre ícone e texto */
+}
+
+.download-pdf-btn:hover {
+    background-color: #c82333; /* Vermelho mais escuro no hover */
+    transform: translateY(-1px);
+}
+
+.download-pdf-btn i {
+    font-size: 1.2em; /* Tamanho do ícone */
+}
+
+/* Responsividade para o botão */
+@media (max-width: 768px) {
+    .download-pdf-container {
+        text-align: center; /* Centraliza o botão em telas menores */
+    }
+    .download-pdf-btn {
+        width: 100%; /* Ocupa largura total em mobile */
+        justify-content: center; /* Centraliza conteúdo do botão */
+    }
+}
+/* Container da Seção de Orçamento Mensal */
+.monthly-budget-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); /* Sombra mais profunda para destacar */
+    margin-bottom: 30px;
+    overflow: hidden; /* Para conter os elementos da tabela e sombra */
+}
+
+.monthly-budget-section h2 {
+    color: #2c3e50;
+    font-size: 1.8em;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+/* Filtros e Botão Salvar (já devem ter estilo, mas reforçando) */
+.monthly-budget-section .filters {
+    display: flex;
+    justify-content: center; /* Centraliza os filtros */
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #f8f9fa; /* Fundo suave para os controles */
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.monthly-budget-section .filters label {
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0; /* Remove margem padrão de labels */
+}
+
+.monthly-budget-section .filters input[type="number"] {
+    width: 120px; /* Largura fixa para o input de ano */
+    text-align: center;
+    padding: 8px 12px;
+    font-size: 1em;
+}
+
+.monthly-budget-section .filters button {
+    background-color: #007bff; /* Azul para o botão de salvar orçamento */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    width: auto; /* Anula 100% width de buttons de form */
+}
+.monthly-budget-section .filters button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+.monthly-budget-section .error-message,
+.monthly-budget-section .success-message {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 500;
+}
+.monthly-budget-section .error-message { color: #dc3545; }
+.monthly-budget-section .success-message { color: #28a745; }
+
+
+/* Container para a Tabela com Scroll */
+.monthly-budget-table-container {
+    overflow: auto; /* Adiciona scrollbars se o conteúdo for maior */
+    max-height: calc(100vh - 250px); /* Limita a altura para que a tabela seja scrollável, ajusta conforme o layout */
+    border: 1px solid #e0e0e0; /* Borda ao redor da área da tabela */
+    border-radius: 8px;
+    box-shadow: inset 0 1px 5px rgba(0,0,0,0.05); /* Sombra interna para profundidade */
+}
+
+/* Tabela de Orçamento Mensal */
+.monthly-budget-table {
+    width: 100%; /* Ocupa a largura disponível no container */
+    min-width: 1200px; /* Garante que a tabela não fique muito estreita para muitos meses + colunas sticky */
+    border-collapse: separate; /* Permite border-spacing e bordas arredondadas */
+    border-spacing: 0; /* Remove espaço entre células */
+    background-color: #ffffff;
+    font-size: 0.9em;
+}
+
+/* Cabeçalho da Tabela */
+.monthly-budget-table thead th {
+    background-color: #34495e; /* Fundo escuro para o cabeçalho */
+    color: white;
+    padding: 12px 8px;
+    text-align: center;
+    border-right: 1px solid rgba(255, 255, 255, 0.1); /* Separador entre colunas do cabeçalho */
+    border-bottom: 2px solid #2c3e50; /* Linha de base mais grossa */
+    position: sticky; /* Torna o cabeçalho fixo ao rolar */
+    top: 0;
+    z-index: 3; /* Garante que o cabeçalho fique sobre o conteúdo ao rolar */
+}
+.monthly-budget-table thead th:first-child { border-top-left-radius: 8px; }
+.monthly-budget-table thead th:last-child { border-top-right-radius: 8px; border-right: none; }
+
+
+/* Colunas Fixas (Sticky Columns) */
+.monthly-budget-table .sticky-col {
+    position: sticky;
+    background-color: #f8f9fa; /* Fundo para a coluna fixa */
+    border-right: 1px solid #e0e0e0;
+    z-index: 2; /* Fica acima das outras células ao rolar horizontalmente */
+    text-align: left !important;
+    padding-left: 10px;
+}
+.monthly-budget-table tbody tr td:first-child.sticky-col {
+    left: 0; /* Primeira coluna fixa na esquerda */
+    min-width: 150px; /* Largura para Classificação */
+    max-width: 150px;
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.monthly-budget-table tbody tr td:nth-child(2).sticky-col {
+    left: 150px; /* Segunda coluna fixa após a primeira */
+    min-width: 200px; /* Largura para Descrição */
+    max-width: 200px;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Garante que os cabeçalhos das sticky columns também sejam sticky e estejam acima */
+.monthly-budget-table thead th:first-child { left: 0; z-index: 4; }
+.monthly-budget-table thead th:nth-child(2) { left: 150px; z-index: 4; } /* Offset da primeira sticky col */
+
+
+/* Células da Tabela (Corpo) */
+.monthly-budget-table tbody td {
+    padding: 0; /* Remove padding padrão para estilizar o input */
+    border-bottom: 1px solid #e0e0e0;
+    border-right: 1px solid #f0f0f0; /* Linhas verticais mais finas para dados */
+    text-align: right; /* Alinha valores à direita */
+    vertical-align: middle;
+}
+.monthly-budget-table tbody td:last-child { border-right: none; } /* Remove borda na última coluna */
+
+
+/* Estilo dos Inputs dentro das Células */
+.monthly-budget-table .budget-input-cell {
+    width: 100%; /* Ocupa a largura total da célula */
+    padding: 8px;
+    border: none; /* Remove borda do input */
+    background-color: transparent; /* Fundo transparente */
+    text-align: right; /* Alinha o texto à direita */
+    font-size: 0.9em;
+    color: #333;
+    box-sizing: border-box; /* Garante padding dentro da largura */
+}
+.monthly-budget-table .budget-input-cell:focus {
+    background-color: #eaf2f8; /* Fundo claro ao focar */
+    outline: none;
+    box-shadow: 0 0 0 1px #3498db; /* Borda azul fina ao focar */
+    border-radius: 4px;
+}
+
+/* Linhas de Categoria */
+.monthly-budget-table tbody tr.category-header td {
+    background-color: #dbe9f5; /* Fundo azul claro */
+    color: #2c3e50;
+    font-weight: bold;
+    padding: 10px 8px;
+    text-align: left;
+    border-top: 2px solid #aeb6bf; /* Linha superior mais grossa */
+}
+
+/* Linhas de Total */
+.monthly-budget-table tbody tr.total-row td {
+    background-color: #c9def0; /* Fundo azul um pouco mais escuro para totais */
+    color: #2c3e50;
+    font-weight: bold;
+    padding: 10px 8px;
+    text-align: right;
+    border-top: 2px solid #aeb6bf;
+    font-size: 1em;
+}
+.monthly-budget-table tbody tr.total-row td:first-child.sticky-col {
+    text-align: left !important;
+}
+
+
+/* Responsividade para a tabela */
+@media (max-width: 768px) {
+    .monthly-budget-table-container {
+        /* Permite scroll horizontal em telas pequenas, mas não pode ter min-width se for para quebrar */
+        /* min-width: unset; */
+    }
+    .monthly-budget-table {
+        min-width: 900px; /* Força a tabela a ter um min-width para mobile para manter a usabilidade horizontal */
+        /* As sticky columns ainda funcionarão, mas a tabela em si será scrollável */
+    }
+    .monthly-budget-table .sticky-col {
+        /* Ajuste de largura para mobile se necessário, ou deixe o min-width da tabela resolver */
+    }
+}
+/* Estilos da Seção do Livro Caixa */
+.cash-book-report-section {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.cash-book-report-section h2 {
+    color: #2c3e50;
+    font-size: 1.8em;
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Informações do Cabeçalho da Igreja/Mês */
+.cash-book-header-info {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.4;
+}
+
+.cash-book-header-info p {
+    margin: 0;
+}
+.cash-book-header-info strong {
+    color: #333;
+}
+
+/* Resumo Mensal (Entradas, Saídas, Saldo do Mês) */
+.cash-book-summary-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px;
+    background-color: #e8f0f8; /* Fundo suave para o resumo */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+    gap: 15px;
+}
+
+.cash-book-summary-grid > div {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #34495e;
+}
+.cash-book-summary-grid > div span {
+    font-weight: bold;
+    color: #28a745; /* Verde para entradas */
+    margin-left: 5px;
+}
+.cash-book-summary-grid > div:nth-child(2) span { /* Saídas */
+    color: #dc3545; /* Vermelho para saídas */
+}
+.cash-book-summary-grid > div:nth-child(3) span { /* Saldo do Mês */
+    color: #007bff; /* Azul para saldo */
+}
+
+/* Saldo Acumulado (Ano Anterior, Mês Anterior, a Transportar) */
+.cash-book-balance-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px;
+    background-color: #f0f4f8; /* Fundo ligeiramente diferente */
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.cash-book-balance-grid > div {
+    font-size: 1.0em;
+    color: #555;
+}
+.cash-book-balance-grid > div span {
+    font-weight: bold;
+    color: #2c3e50; /* Cor mais neutra para saldos acumulados */
+    margin-left: 5px;
+}
+
+
+/* Tabela de Transações Detalhadas do Livro Caixa */
+.cash-book-transactions-table-container {
+    overflow-x: auto; /* Permite scroll horizontal */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 5px rgba(0,0,0,0.05);
+    margin-top: 20px;
+}
+
+.cash-book-table {
+    width: 100%;
+    min-width: 600px; /* Garante largura mínima para colunas */
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+
+.cash-book-table th,
+.cash-book-table td {
+    padding: 10px 12px;
+    border: 1px solid #e9ecef; /* Bordas finas entre células */
+    text-align: left;
+}
+
+.cash-book-table thead th {
+    background-color: #34495e; /* Fundo escuro para cabeçalho da tabela */
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.cash-book-table tbody tr:nth-child(odd) {
+    background-color: #f9fbfc; /* Linhas zebradas */
+}
+.cash-book-table tbody tr:hover {
+    background-color: #eef2f5; /* Hover nas linhas */
+}
+
+.cash-book-table td.align-right {
+    text-align: right;
+    font-weight: 500;
+}
+.cash-book-table td.align-right.value-income { color: #28a745; }
+.cash-book-table td.align-right.value-expense { color: #dc3545; }
+
+.cash-book-table .text-center {
+    text-align: center;
+}
+
+/* Ajustes para o botão de download PDF na página */
+.download-pdf-container {
+    text-align: center; /* Centraliza o botão */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+/* Estilos da Seção do Livro Caixa */
+.cash-book-report-section {
+    /* ... (restante do seu CSS existente para esta seção) ... */
+}
+
+/* Informações do Cabeçalho da Igreja/Mês (visíveis no PDF) */
+/* Assegura que estas informações tenham um estilo que html2pdf.js consiga renderizar bem */
+.cash-book-header-info {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.4;
+    padding: 10px; /* Adicionado padding para melhor visualização no PDF */
+}
+
+.cash-book-header-info p {
+    margin: 0;
+    padding: 0; /* Garante que não há padding extra */
+}
+.cash-book-header-info strong {
+    color: #333;
+}
+/* Estilos para o formulário de adicionar categoria (se você decidir mantê-lo ou adaptá-lo) */
+.add-category-form {
+    background-color: #f0f4f8;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+}
+.add-category-form h3 {
+    text-align: center;
+    color: #4a69bd;
+    margin-bottom: 20px;
+}
+
+/* Instruções na página */
+.monthly-budget-section .instructions {
+    text-align: center;
+    font-style: italic;
+    color: #666;
+    margin-bottom: 25px;
+    padding: 10px;
+    background-color: #e6f7ff;
+    border: 1px solid #b3e0ff;
+    border-radius: 5px;
+}
+
+/* Coluna de Status/Ações na tabela de orçamento */
+.monthly-budget-table thead th:last-child {
+    width: 80px; /* Largura para a coluna Ações/Status */
+    text-align: center;
+}
+
+.monthly-budget-table tbody td:last-child {
+    text-align: center;
+    padding: 5px; /* Menor padding para o botão */
+}
+
+/* Estilo para a linha da categoria ativa/inativa */
+.monthly-budget-table tbody tr.category-active {
+    /* Pode adicionar um fundo mais claro ou borda para destacar que está ativa */
+    background-color: #e6ffe6; /* Leve verde para ativa */
+}
+.monthly-budget-table tbody tr.category-inactive {
+    background-color: #ffe6e6; /* Leve vermelho para inativa */
+    opacity: 0.7; /* Suaviza visualmente */
+}
+
+/* Estilo do checkbox de status */
+.monthly-budget-table tbody td input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.monthly-budget-table tbody td input[type="checkbox"]:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.monthly-budget-table tbody td input[type="checkbox"]:checked::after {
+    content: '\2713'; /* Checkmark */
+    color: white;
+    font-size: 14px;
+    position: relative;
+    top: -2px; /* Ajuste fino do checkmark */
+    left: 2px;
+}
+
+/* Botão de exclusão (lixeira) na tabela */
+.monthly-budget-table .delete-category-btn {
+    background: none;
+    border: none;
+    color: #dc3545; /* Vermelho */
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+.monthly-budget-table .delete-category-btn:hover {
+    background-color: #ffe0e0;
+}
+/* Estilos para o Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    max-height: 90vh; /* Limita a altura do modal */
+    overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: #555;
+}
+
+.close-modal-btn:hover {
+    color: #333;
+}
+
+/* Estilos para a tabela de transações */
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.transactions-table th,
+.transactions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap; /* Evita quebra de linha em células */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adiciona reticências se o conteúdo for cortado */
+}
+
+.transactions-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.transactions-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.value-income {
+    color: #28a745; /* Verde para receitas */
+    font-weight: bold;
+}
+
+.value-expense {
+    color: #dc3545; /* Vermelho para despesas */
+    font-weight: bold;
+}
+
+/* Estilos para os botões de ação na tabela */
+.actions-cell {
+    text-align: center;
+}
+
+.actions-cell button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 1.1em;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.actions-cell .edit-btn {
+    color: #007bff; /* Azul para editar */
+}
+
+.actions-cell .edit-btn:hover {
+    background-color: #e7f4ff;
+}
+
+.actions-cell .delete-btn {
+    color: #dc3545; /* Vermelho para excluir */
+}
+
+.actions-cell .delete-btn:hover {
+    background-color: #ffe7e7;
+}
+
+/* Responsividade da tabela */
+.table-responsive {
+    overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+    width: 100%;
+}
+/* Estilos para o Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    max-height: 90vh; /* Limita a altura do modal */
+    overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: #555;
+}
+
+.close-modal-btn:hover {
+    color: #333;
+}
+
+/* Estilos para a tabela de transações (se ainda não os tem no TransactionList) */
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.transactions-table th,
+.transactions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap; /* Evita quebra de linha em células */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adiciona reticências se o conteúdo for cortado */
+}
+
+.transactions-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.transactions-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.value-income {
+    color: #28a745; /* Verde para receitas */
+    font-weight: bold;
+}
+
+.value-expense {
+    color: #dc3545; /* Vermelho para despesas */
+    font-weight: bold;
+}
+
+/* Estilos para os botões de ação na tabela */
+.actions-cell {
+    text-align: center;
+}
+
+.actions-cell button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 1.1em;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.actions-cell .edit-btn {
+    color: #007bff; /* Azul para editar */
+}
+
+.actions-cell .edit-btn:hover {
+    background-color: #e7f4ff;
+}
+
+.actions-cell .delete-btn {
+    color: #dc3545; /* Vermelho para excluir */
+}
+
+.actions-cell .delete-btn:hover {
+    background-color: #ffe7e7;
+}
+
+/* Responsividade da tabela */
+.table-responsive {
+    overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+    width: 100%;
+}
+/* ... (Seu CSS existente) ... */
+
+/* Estilos para a tabela de transações */
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.transactions-table th,
+.transactions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap; /* Evita quebra de linha em células */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adiciona reticências se o conteúdo for cortado */
+}
+
+/* NOVO: Estilo para o cabeçalho da tabela sticky */
+.transactions-table thead {
+    position: -webkit-sticky; /* Para compatibilidade com navegadores WebKit */
+    position: sticky;
+    top: 0; /* Fica fixo no topo do container de rolagem */
+    z-index: 2; /* Garante que fique acima do conteúdo */
+    background-color: #34495e; /* Fundo escuro para o cabeçalho */
+    color: white; /* Texto branco */
+}
+
+.transactions-table thead th {
+    background-color: #34495e; /* Fundo escuro para o cabeçalho */
+    font-weight: bold;
+    color: white;
+}
+
+.transactions-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.value-income {
+    color: #28a745; /* Verde para receitas */
+    font-weight: bold;
+}
+
+.value-expense {
+    color: #dc3545; /* Vermelho para despesas */
+    font-weight: bold;
+}
+
+/* Estilos para os botões de ação na tabela */
+.actions-cell {
+    text-align: center;
+}
+
+.actions-cell button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 1.1em;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+/* Garante que os ícones tenham cor e tamanho */
+.actions-cell button i {
+    font-size: 1.2em; /* Tamanho do ícone */
+    color: inherit; /* Herda a cor do botão pai */
+}
+
+.actions-cell .edit-btn {
+    color: #007bff; /* Azul para editar */
+}
+
+.actions-cell .edit-btn:hover {
+    background-color: #e7f4ff;
+}
+
+.actions-cell .delete-btn {
+    color: #dc3545; /* Vermelho para excluir */
+}
+
+.actions-cell .delete-btn:hover {
+    background-color: #ffe7e7;
+}
+
+/* Responsividade da tabela */
+.table-responsive {
+    overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+    width: 100%;
+    /* Adicionado para rolagem vertical da tabela */
+    max-height: calc(100vh - 250px); /* Ajuste conforme o espaço disponível */
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 5px rgba(0,0,0,0.05);
+}
+/* ... (Seu CSS existente) ... */
+
+/* Estilos para a tabela de transações */
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.transactions-table th,
+.transactions-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    white-space: nowrap; /* Evita quebra de linha em células */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adiciona reticências se o conteúdo for cortado */
+}
+
+/* Estilo para o cabeçalho da tabela sticky */
+.transactions-table thead {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: #34495e;
+    color: white;
+}
+
+.transactions-table thead th {
+    background-color: #34495e;
+    font-weight: bold;
+    color: white;
+}
+
+.transactions-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.value-income {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.value-expense {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Estilos para os botões de ação na tabela */
+.actions-cell {
+    text-align: center;
+}
+
+.actions-cell button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 1.1em; /* Tamanho base do botão */
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    /* NOVO: Propriedades para garantir a visibilidade do ícone */
+    display: inline-flex; /* Garante que o botão seja um flex container para o ícone */
+    align-items: center;
+    justify-content: center;
+}
+
+/* NOVO: Estilo direto para o ícone (tag <i>) */
+.actions-cell button i.fas { /* Alvo a classe 'fas' para mais especificidade */
+    font-size: 1.2em; /* Tamanho do ícone */
+    color: black; /* COR PRETA SOLICITADA */
+    /* Remove qualquer sombra de texto que possa estar ocultando-o */
+    text-shadow: none; 
+    /* Garante que o Font Awesome esteja sendo usado */
+    font-family: "Font Awesome 6 Free"; /* Verifica se esta é a font-family correta para sua versão do FA */
+    font-weight: 900; /* Para ícones sólidos (fas) */
+}
+
+.actions-cell .edit-btn i.fas {
+    color: #007bff; /* Azul para editar (prioriza sobre o preto geral do i.fas) */
+}
+
+.actions-cell .edit-btn:hover {
+    background-color: #e7f4ff;
+}
+
+.actions-cell .delete-btn i.fas {
+    color: #dc3545; /* Vermelho para excluir (prioriza sobre o preto geral do i.fas) */
+}
+
+.actions-cell .delete-btn:hover {
+    background-color: #ffe7e7;
+}
+
+/* Responsividade da tabela */
+.table-responsive {
+    overflow-x: auto;
+    width: 100%;
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 5px rgba(0,0,0,0.05);
+}
+/* Container da barra de filtro na página de transações */
+.transactions-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre os elementos */
+    margin-bottom: 20px; /* Espaço abaixo da barra de filtro */
+    background-color: #f8f9fa; /* Fundo suave */
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Sombra interna */
+    flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+    justify-content: flex-start; /* Alinha ao início */
+}
+
+.transactions-filter-bar label {
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap;
+}
+
+.transactions-filter-bar input.filter-date-input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #d0d7de;
+    background-color: #fcfdfe;
+    font-size: 0.9em;
+    cursor: pointer;
+    max-width: 150px; /* Limita a largura do input de data */
+}
+
+.transactions-filter-bar button.clear-filter-btn {
+    background-color: #6c757d;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+    width: auto; /* Anula 100% width */
+}
+.transactions-filter-bar button.clear-filter-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Responsividade do filtro */
+@media (max-width: 768px) {
+    .transactions-filter-bar {
+        justify-content: center; /* Centraliza itens */
+    }
+    .transactions-filter-bar label,
+    .transactions-filter-bar input.filter-date-input,
+    .transactions-filter-bar button.clear-filter-btn {
+        flex-basis: 100%; /* Faz cada item ocupar sua própria linha */
+        margin-bottom: 5px; /* Adiciona espaço entre eles */
+        text-align: center; /* Centraliza texto nos inputs */
+    }
+    .transactions-filter-bar label {
+        margin-right: 0;
+    }
+}
+
+/* Container para o botão de gerenciamento */
+.manage-category-buttons-container {
+    text-align: right; /* Alinha o botão para a direita */
+    margin-bottom: 20px;
+}
+
+.add-category-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.add-category-btn:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+/* Modal de Gerenciamento de Categorias */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: #555;
+}
+
+.close-modal-btn:hover {
+    color: #333;
+}
+
+.modal-content .form label {
+    font-size: 1em;
+    font-weight: 600;
+    color: #34495e;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.modal-content .form input,
+.modal-content .form select,
+.modal-content .form textarea {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.modal-content .form button[type="submit"] {
+    margin-top: 20px;
+    width: 100%;
+}
+.modal-content .form button.cancel-btn {
+    margin-top: 10px;
+    background-color: #6c757d;
+}
+
+/* Estilos para os botões de ação na tabela de orçamento */
+.monthly-budget-table .actions-cell {
+    width: 80px; /* Largura fixa para os botões */
+    text-align: center;
+    white-space: nowrap;
+}
+
+.monthly-budget-table .actions-cell button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    font-size: 1.1em;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.monthly-budget-table .edit-btn { color: #007bff; }
+.monthly-budget-table .edit-btn:hover { background-color: #e7f4ff; }
+
+.monthly-budget-table .delete-btn { color: #dc3545; }
+.monthly-budget-table .delete-btn:hover { background-color: #ffe7e7; }
+/* Container do Dashboard de Relatórios */
+.report-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Cards de resumo */
+.dashboard-cards {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-cards .summary-card {
+  flex: 1;
+  min-width: 250px;
+  padding: 20px;
+  text-align: center;
+}
+
+.dashboard-cards .summary-card h4 {
+  font-size: 1.2em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.dashboard-cards .summary-card p {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.dashboard-cards .entradas p { color: #28a745; }
+.dashboard-cards .saidas p { color: #dc3545; }
+.dashboard-cards .saldo p { color: #007bff; }
+
+/* Contêineres de Gráficos */
+.chart-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+/* Ajustes de Filtros para a página de Relatórios */
+.filters.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.filters.form select,
+.filters.form input[type="date"] {
+  width: 100%;
+}
+/* Container do Dashboard de Relatórios */
+.report-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Cards de resumo */
+.dashboard-cards {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.dashboard-cards .summary-card {
+  flex: 1;
+  min-width: 250px;
+  padding: 20px;
+  text-align: center;
+}
+
+.dashboard-cards .summary-card h4 {
+  font-size: 1.2em;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.dashboard-cards .summary-card p {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.dashboard-cards .entradas p { color: #28a745; }
+.dashboard-cards .saidas p { color: #dc3545; }
+.dashboard-cards .saldo p { color: #007bff; }
+
+/* Contêineres de Gráficos */
+.chart-container {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+/* Ajustes de Filtros para a página de Relatórios */
+.filters.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.filters.form select,
+.filters.form input[type="date"] {
+  width: 100%;
+}
+/* --- ESTILOS PARA A TABELA DE TRANSAÇÕES --- */
+.transactions-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.95em;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden; /* Garante que o border-radius seja aplicado nas bordas da tabela */
+}
+
+.transactions-table th, .transactions-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.transactions-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.transactions-table tbody tr:last-of-type td {
+  border-bottom: none;
+}
+
+.transactions-table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* --- ESTILOS PARA A CÉLULA DE AÇÕES E BOTÕES --- */
+.actions-cell {
+  text-align: center;
+  white-space: nowrap; /* Impede que os botões quebrem a linha */
+}
+
+.edit-btn, .delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em; /* Tamanho do ícone */
+  padding: 5px 8px;
+  margin: 0 4px;
+  border-radius: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.edit-btn .fa-edit {
+  color: #ffc107; /* Amarelo/Laranja */
+}
+
+.delete-btn .fa-trash-alt {
+  color: #dc3545; /* Vermelho */
+}
+
+.edit-btn:hover {
+  background-color: #fff8e1;
+}
+
+.delete-btn:hover {
+  background-color: #f8d7da;
+}
+/* --- ESTILOS DA PÁGINA DE MEMBROS --- */
+
+/* Cabeçalho da página com título e botão */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+.add-new-btn {
+  background-color: #6a994e; /* Verde principal */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.add-new-btn:hover {
+  background-color: #5b8242;
+  transform: translateY(-2px);
+}
+
+/* Card da Lista */
+.list-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  padding: 25px 30px;
+}
+
+/* Tabela de Membros */
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.members-table th, .members-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.members-table th {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  background-color: #f9fafb;
+}
+
+.members-table td {
+  color: #333;
+  vertical-align: middle;
+}
+
+.members-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.members-table strong {
+  font-weight: 600;
+}
+
+.joint-tithe-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+}
+
+.joint-tithe-cell .fa-users {
+  color: #6a994e;
+}
+
+.empty-list-message td {
+  text-align: center;
+  padding: 40px;
+  color: #777;
+  font-style: italic;
+}
+
+/* --- ESTILOS DO MODAL (Reutilizável) --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.4s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.8em;
+  color: #333;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 2em;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.close-modal-btn:hover {
+  color: #333;
+}
+
+/* Animações simples para o modal */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* --- ESTILOS FINAIS E CORRIGIDOS DA PÁGINA DE ORÇAMENTO --- */
+
+/* Contêiner principal que força o layout de UMA COLUNA e largura total */
+.budget-page-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.budget-page-container .page-header {
+  width: 100%;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 20px;
+}
+
+.view-switcher {
+  display: flex;
+  gap: 10px;
+  margin: 25px 0;
+}
+
+.view-switcher button {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #495057;
+  padding: 10px 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-switcher button:hover {
+  background-color: #e9ecef;
+}
+
+.view-switcher button.active {
+  background-color: #6a994e;
+  color: #fff;
+  border-color: #6a994e;
+}
+
+.budget-content {
+  width: 100%;
+}
+
+/* Card da Tabela */
+.budget-table-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.table-responsive-wrapper {
+  overflow: auto;
+  max-height: calc(100vh - 300px); /* Altura máxima com rolagem */
+}
+
+/* Tabela */
+.budget-table {
+  width: 100%;
+  min-width: 1400px;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.budget-table th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  color: #495057;
+  font-size: 0.85em;
+  font-weight: 700;
+  padding: 14px 10px;
+  text-transform: uppercase;
+}
+
+.budget-table td {
+  padding: 5px 10px;
+  border-bottom: 1px solid #f1f3f5;
+  text-align: right;
+  vertical-align: middle;
+  height: 52px;
+}
+
+.col-category {
+  background-color: #fff;
+  border-right: 1px solid #f1f3f5;
+  left: 0;
+  min-width: 300px;
+  position: sticky;
+  text-align: left;
+  font-weight: 500;
+}
+
+.budget-table thead .col-category {
+  background-color: #f8f9fa;
+}
+
+.col-total {
+  font-weight: 700;
+  min-width: 140px;
+}
+
+/* Linha de Resumo da Categoria */
+.category-summary-row {
+  background-color: #f8f9fa;
+  font-size: 1.05em;
+}
+.category-summary-row:hover {
+  background-color: #e9ecef;
+}
+.category-summary-row .col-category {
+  background-color: inherit;
+  color: #212529;
+}
+.spec-count {
+    text-align: left;
+    font-size: 0.8em;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Linha de Detalhes (Input) */
+.detail-name {
+  padding-left: 30px !important;
+  color: #495057;
+}
+
+/* Rodapé da Tabela com Totais */
+.budget-table tfoot {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+.grand-total-row {
+  background-color: #343a40;
+  color: #fff;
+  font-size: 1.1em;
+  font-weight: 700;
+}
+.grand-total-row td {
+  padding: 15px 10px;
+}
+/* --- ESTILOS CORRIGIDOS DA PÁGINA DE MEMBROS --- */
+
+/* Contêiner principal que força o layout de UMA COLUNA e largura total */
+.members-page-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column; /* Garante que os filhos (header e list-card) fiquem um em cima do outro */
+  gap: 25px;
+}
+
+/* Cabeçalho da página com título e botão */
+.members-page-container .page-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Para telas menores */
+  gap: 20px;
+}
+
+.members-page-container .page-header h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+/* Card da Lista de Membros */
+.members-page-container .list-card {
+  width: 100%; /* O card agora ocupa toda a largura disponível */
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07);
+  padding: 25px 30px;
+}
+
+/* Cabeçalho do Card da Lista (com título e busca) */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.list-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.search-bar {
+  position: relative;
+}
+
+.search-bar .fa-search {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+}
+
+.search-bar input {
+  padding: 10px 15px 10px 40px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  font-size: 1em;
+  min-width: 280px;
+}
+
+/* Tabela de Membros */
+.members-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.members-table th, .members-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.members-table th {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.members-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+/* --- Estilos RESTAURADOS para o Home/Dashboard --- */
+
+.dashboard-cards-grid {
+    /* Layout padrão para os 3 cards principais */
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    /* Estilo do card de resumo original que você gosta */
+    flex: 1;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave para separação */
+    text-align: center;
+}
+
+.summary-card h4 {
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 1.1em;
+}
+
+.summary-card p {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+/* --- Layout de Colunas para Obrigações e Detalhes --- */
+
+.main-layout-container {
+    /* Mantém a divisão 40/60 para o conteúdo abaixo dos cards principais */
+    display: grid;
+    grid-template-columns: 40% 60%; 
+    gap: 30px;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.obligations-grid {
+    /* Coluna de Obrigações (PRE-R e SÍNODO) */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.obligation-card {
+    /* Estilo do card de obrigação: fundo claro para contraste */
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.detail-cards-grid {
+    /* Coluna de Contas a Pagar/Receber */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.detail-card {
+    /* Estilo minimalista para os detalhes */
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.section-title {
+    font-size: 1.2em;
+    color: #34495e;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .dashboard-cards-grid {
+        flex-direction: column;
+    }
+    .main-layout-container {
+        grid-template-columns: 1fr;
+    }
+}
+/* 1. LAYOUT DE COLUNAS ABAIXO DOS CARDS PRINCIPAIS (40% Obrigações / 60% Detalhes) */
+.main-layout-container {
+    display: grid;
+    grid-template-columns: 40% 60%; 
+    gap: 30px;
+    align-items: start;
+    margin-top: 30px; /* Mais espaço para separar dos cards do topo */
+    padding: 0 15px; /* Adiciona um pouco de padding lateral para o conteúdo */
+}
+
+/* 2. ESTILOS DOS CARDS DE RESUMO (TOPO) */
+
+.dashboard-cards-grid {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+    padding: 0 15px; /* Alinha com o conteúdo abaixo */
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Sombra mais destacada */
+    text-align: center;
+}
+
+.summary-card p {
+    font-size: 2.2em; /* Deixa o valor maior */
+}
+
+/* 3. ESTILOS DAS OBRIGAÇÕES ECLESIÁSTICAS */
+
+.obligations-column h3,
+.details-column h3 {
+    font-size: 1.25em;
+    color: #34495e;
+    font-weight: 600;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 8px;
+}
+
+.obligations-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Aumenta o espaço entre os cards de PRE-R e SÍNODO */
+}
+
+.obligation-card {
+    background-color: #ffffff;
+    border: 1px solid #d0d7de;
+    padding: 30px 20px; /* Mais padding interno */
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.obligation-card h4 {
+    color: #4a69bd;
+    font-size: 1em;
+    margin-bottom: 5px;
+}
+
+.obligation-amount {
+    font-size: 2.5em; /* Valor do cálculo em destaque */
+    margin-bottom: 15px;
+}
+
+.calculation-note {
+    font-size: 0.85em;
+    color: #7f8c8d;
+    margin-top: 10px;
+}
+
+/* 4. ESTILOS DE DETALHAMENTO (Contas a Pagar / Detalhamento) */
+
+.details-column {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Sombra para o container inteiro */
+}
+
+.detail-table-placeholder {
+    /* Container para a tabela de detalhamento */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden; /* Garante que a tabela se ajuste */
+}
+
+.clean-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.clean-detail-table th {
+    background-color: #f0f4f8; /* Fundo do cabeçalho da tabela de detalhe */
+    color: #34495e;
+    font-weight: 600;
+    padding: 10px;
+    text-transform: uppercase;
+}
+/* Alinhamento dos valores na tabela de Detalhe */
+.clean-detail-table td:last-child {
+    text-align: right; 
+    font-weight: 500;
+}
+
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .dashboard-cards-grid {
+        flex-direction: column;
+    }
+    .main-layout-container {
+        grid-template-columns: 1fr; /* Empilha as colunas em telas menores */
+    }
+    .main-layout-container {
+        padding: 0 15px;
+    }
+}
+/* --- Estilos Adicionais para Ícones e Detalhe de Caixa --- */
+
+.summary-card {
+    /* Mantém o card como um container flex para controle */
+    display: flex; 
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.summary-card .card-header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; /* Coloca ícone e título na vertical */
+    margin-bottom: 10px;
+}
+
+.summary-card .card-header-icon h4 {
+    margin: 5px 0 0 0; /* Ajusta a margem do título */
+}
+
+/* Estilo dos Ícones */
+.summary-card i {
+    font-size: 1.8em;
+    padding: 10px;
+    border-radius: 50%;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.icon-entradas { background-color: #28a745; }
+.icon-saidas { background-color: #dc3545; }
+.icon-saldo { background-color: #007bff; }
+
+
+/* Estilo para o Saldo em Espécie (Caixa Geral) */
+.cash-detail {
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #6c757d; /* Cor neutra para detalhe */
+    border-top: 1px dashed #e0e0e0;
+    padding-top: 5px;
+    margin-top: 5px;
+    display: block; /* Garante que ocupe a largura total do centro */
+    width: 100%;
+}
+.cash-detail-placeholder {
+    /* Garante que todos os cards tenham a mesma altura, mesmo sem o detalhe do caixa */
+    height: 1.5em; /* Altura de uma linha de texto pequena */
+    display: block;
+    padding-top: 5px;
+    margin-top: 5px;
+}
+/* --- Estilos para as Obrigações Eclesiásticas --- */
+
+/* Contêiner da Coluna (para aplicar o fundo branco do card maior) */
+.obligations-column {
+    /* Ocupa a área da coluna e não tem estilo de fundo por padrão, mas pode receber */
+}
+
+.obligations-column .section-title {
+    /* Mantém o estilo de título */
+}
+
+.obligations-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; 
+}
+
+.obligation-card {
+    /* Estilo Base: Fundo e borda limpos */
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 25px 20px; 
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+}
+
+.obligation-card:hover {
+    transform: translateY(-2px); /* Efeito sutil de elevação */
+}
+
+.obligation-card h4 {
+    color: #34495e;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.obligation-amount {
+    font-size: 2.5em; 
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+/* Estilos Específicos por Tipo */
+.obligation-card.style-prer {
+    border-left: 5px solid #ffbb28; /* Amarelo/Laranja sutil */
+}
+
+.obligation-card.style-sinodo {
+    border-left: 5px solid #007bff; /* Azul para Sínodo */
+}
+
+/* Botões de Pagamento */
+.unpaid-btn {
+    background-color: #040700; /* Vermelho padrão para pagar */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 15px;
+}
+/* O estilo para o botão PAGO (paid-btn) e a nota de cálculo (calculation-note) permanecem os mesmos. */
+/* --- ESTILOS PARA TABELA DE ORÇAMENTO HIERÁRQUICA (DROPDOWN) --- */
+
+/* Linha Pai (Categoria Principal) */
+.parent-row {
+    background-color: #e3f2fd; /* Azul bem claro para destacar */
+    cursor: pointer;
+    font-weight: 600;
+    border-bottom: 2px solid #fff; /* Separação visual */
+    transition: background-color 0.2s ease;
+}
+
+.parent-row:hover {
+    background-color: #bbdefb; /* Highlight ao passar o mouse */
+}
+
+.parent-cell-content {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaço entre ícone e texto */
+}
+
+/* Ícone de seta */
+.toggle-icon {
+    font-size: 0.8em;
+    color: #555;
+    transition: transform 0.2s ease;
+    width: 15px; /* Largura fixa para alinhar */
+    text-align: center;
+}
+
+/* Linha Filho (Especificações) */
+.child-row {
+    background-color: #ffffff;
+    font-size: 0.95em;
+    border-bottom: 1px solid #f0f0f0;
+    /* Animação suave de entrada (opcional) */
+    animation: fadeInRow 0.3s ease;
+}
+
+.child-row:hover {
+    background-color: #fafafa;
+}
+
+/* Indentação do nome da especificação */
+.child-indent {
+    padding-left: 40px !important; /* Empurra o texto para a direita */
+    color: #666;
+    border-left: 4px solid #e3f2fd; /* Linha guia visual na esquerda */
+}
+
+/* Células que são apenas leitura (somas) */
+.read-only-cell {
+    background-color: transparent;
+    color: #333;
+    font-size: 0.9em;
+    vertical-align: middle;
+    padding: 0 10px; /* Padding lateral */
+    pointer-events: none; /* Impede edição/foco */
+}
+
+.text-muted {
+    color: #888;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+/* Células de Input (editáveis) */
+.budget-input-cell {
+    width: 100%;
+    padding: 8px 5px;
+    border: 1px solid transparent; /* Borda invisível por padrão */
+    border-radius: 4px;
+    text-align: right;
+    background: transparent;
+    transition: all 0.2s;
+}
+
+.budget-input-cell:focus {
+    background-color: #fff;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.budget-input-cell:hover {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+/* Sticky Column da esquerda ajustada para hierarquia */
+.monthly-budget-table .sticky-col {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    border-right: 1px solid #e0e0e0;
+}
+
+.parent-row .sticky-col {
+    background-color: #e3f2fd; /* Acompanha a cor da linha pai */
+}
+.parent-row:hover .sticky-col {
+    background-color: #bbdefb;
+}
+
+.child-row .sticky-col {
+    background-color: #fff;
+}
+.child-row:hover .sticky-col {
+    background-color: #fafafa;
+}
+
+/* Ajustes no cabeçalho */
+.monthly-budget-table thead th {
+    background-color: #2c3e50;
+    color: white;
+    padding: 12px;
+    text-transform: uppercase;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+}
+
+/* Totais Gerais no rodapé da tabela */
+.grand-total-row td {
+    background-color: #34495e !important;
+    color: #fff;
+    font-weight: bold;
+    padding: 15px 10px;
+    border-top: 2px solid #1a252f;
+}
+
+@keyframes fadeInRow {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* --- Estilos para o Histórico de Dízimos (Relatórios) --- */
+
+.member-history-section {
+    text-align: center;
+    background: linear-gradient(to bottom, #ffffff, #fcfcfc);
+}
+
+.months-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 15px;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.month-box {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.month-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.month-label {
+    font-weight: 700;
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.month-status-icon {
+    font-size: 1.8em;
+    margin-bottom: 5px;
+}
+
+.month-status-text {
+    font-size: 0.75em;
+    font-weight: 600;
+}
+
+/* Estilos Ativos (Dizimou) */
+.month-box.active {
+    border-color: #28a745;
+    background-color: #f0fff4;
+}
+
+.month-box.active .month-status-icon {
+    color: #28a745;
+}
+
+.month-box.active .month-status-text {
+    color: #28a745;
+}
+
+/* Estilos Inativos (Não Dizimou) */
+.month-box.inactive {
+    border-color: #f0f0f0;
+    background-color: #fafafa;
+    opacity: 0.7;
+}
+
+.month-box.inactive .month-status-icon {
+    color: #e0e0e0;
+}
+
+.month-box.inactive .month-status-text {
+    color: #ccc;
+}
+
+.text-muted {
+    color: #999;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Ajuste Responsivo para Grid de Meses */
+@media (max-width: 600px) {
+    .months-grid-container {
+        grid-template-columns: repeat(4, 1fr); /* 4 por linha no celular */
+        gap: 10px;
+    }
+    .month-box {
+        padding: 10px 2px;
+    }
+    .month-status-text {
+        display: none; /* Esconde texto em telas muito pequenas */
+    }
+}
+/* --- MELHORIA NOS CAMPOS DE DATA (ESPECÍFICO PARA MAC/SAFARI) --- */
+
+/* Estilo Base do Input de Data */
+input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none; /* Remove estilo nativo feio do Mac */
+    display: inline-block;
+    position: relative;
+    padding: 12px 15px;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    min-width: 160px; /* Garante um tamanho mínimo */
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Foco (quando clica) */
+input[type="date"]:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* --- O TRUQUE PARA O ÍCONE NO MAC --- */
+
+/* Aumenta e destaca o ícone do calendário (WebKit - Chrome/Safari) */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: transparent;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #555;
+    /* Aumenta a área de clique */
+    width: 20px;
+    height: 20px;
+    /* Garante que o ícone fique alinhado */
+    margin-left: 10px;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Efeito ao passar o mouse sobre o ícone do calendário */
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    background-color: #f0f0f0;
+    transform: scale(1.1);
+}
+
+/* Ajuste específico para a barra de filtros das Transações */
+.transactions-filter-bar input[type="date"] {
+    margin-right: 10px; /* Espaço entre os inputs */
+    margin-bottom: 0;   /* Remove margem inferior padrão */
+}
+
+/* Responsividade: No celular, o input ocupa a linha toda */
+@media (max-width: 768px) {
+    .transactions-filter-bar input[type="date"] {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+/* --- MELHORIA NOS CAMPOS DE DATA E MÊS (ESPECÍFICO PARA MAC/SAFARI) --- */
+
+/* Estilo Base para Data e Mês */
+input[type="date"],
+input[type="month"] {
+    appearance: none;
+    -webkit-appearance: none; /* Remove o estilo nativo "feio" do Mac */
+    display: inline-block;
+    position: relative;
+    padding: 12px 15px;
+    border: 1px solid #d0d7de;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    min-width: 160px; /* Garante que o botão tenha um tamanho bom para clicar */
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer; /* Mostra a mãozinha ao passar o mouse em todo o campo */
+}
+
+/* Foco (quando clica) */
+input[type="date"]:focus,
+input[type="month"]:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+/* --- O TRUQUE PARA O ÍCONE NO MAC --- */
+
+/* Aumenta e destaca o ícone do calendário (WebKit - Chrome/Safari) */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="month"]::-webkit-calendar-picker-indicator {
+    background-color: transparent;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    color: #555;
+    /* Aumenta a área de clique do ícone */
+    width: 22px;
+    height: 22px;
+    /* Garante alinhamento */
+    margin-left: 10px;
+    opacity: 0.6;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+/* Efeito ao passar o mouse sobre o ícone */
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="month"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    background-color: #f0f0f0;
+    transform: scale(1.1);
+}
+
+/* Ajuste específico para a barra de filtros das Transações */
+.transactions-filter-bar input[type="date"] {
+    margin-right: 10px;
+    margin-bottom: 0;
+}
+
+/* Ajuste para o Seletor de Mês no Cabeçalho (MainHeader) e Livro Caixa */
+.month-picker-input {
+    min-width: 180px; /* Um pouco mais largo para caber "Janeiro de 2026" */
+    text-align: center; /* Centraliza o texto */
+    font-weight: 500;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .transactions-filter-bar input[type="date"],
+    .month-picker-input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
