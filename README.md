@@ -16,7 +16,6 @@
 | Dashboard Overview | Financial Reports |
 |:------------------:|:-----------------:|
 | ![Dashboard](https://placehold.co/600x400?text=Dashboard+Screenshot) | ![Reports](https://placehold.co/600x400?text=Reports+Screenshot) |
-*(Replace these links with your actual screenshots or GIFs)*
 
 ---
 
