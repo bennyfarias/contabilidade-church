@@ -42,18 +42,20 @@ export const FirebaseDataProvider = ({ children }: { children: ReactNode }) => {
       setAllTransactions(data);
     });
 
-    // 2. Escutar Plano de Contas
-const unsubCategories = onSnapshot(collection(db, 'chartOfAccounts'), (snapshot) => {      // Ordena alfabeticamente
+// 2. Escutar Plano de Contas
+    const unsubCategories = onSnapshot(collection(db, 'chartOfAccounts'), (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ChartOfAccount));
+      // Ordena alfabeticamente
       data.sort((a, b) => a.name.localeCompare(b.name));
       setAllChartOfAccounts(data);
     });
 
     // 3. Escutar Membros
-const unsubMembers = onSnapshot(collection(db, 'members'), (snapshot) => {      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Member));
+    const unsubMembers = onSnapshot(collection(db, 'members'), (snapshot) => {
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Member));
       data.sort((a, b) => a.name.localeCompare(b.name));
       setAllMembers(data);
     });
-
     setIsLoading(false);
 
     // Cleanup (Para de escutar quando fecha o app)
