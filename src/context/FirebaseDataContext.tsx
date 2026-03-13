@@ -43,16 +43,13 @@ export const FirebaseDataProvider = ({ children }: { children: ReactNode }) => {
     });
 
     // 2. Escutar Plano de Contas
-    const unsubCategories = onSnapshot(collection(db, 'plano_contas'), (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ChartOfAccount));
-      // Ordena alfabeticamente
+const unsubCategories = onSnapshot(collection(db, 'chartOfAccounts'), (snapshot) => {      // Ordena alfabeticamente
       data.sort((a, b) => a.name.localeCompare(b.name));
       setAllChartOfAccounts(data);
     });
 
     // 3. Escutar Membros
-    const unsubMembers = onSnapshot(collection(db, 'membros'), (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Member));
+const unsubMembers = onSnapshot(collection(db, 'members'), (snapshot) => {      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Member));
       data.sort((a, b) => a.name.localeCompare(b.name));
       setAllMembers(data);
     });
