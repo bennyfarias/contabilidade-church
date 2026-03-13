@@ -4,7 +4,7 @@ import { BudgetService, BudgetData } from '../services/budgetService';
 import { useBudgetCalculations } from '../hooks/useBudgetCalculations';
 import { ChartOfAccount, TransactionType } from '../types';
 import { MONTHS } from '../utils/constants';
-import { Save, Plus, Trash2, ChevronDown, ChevronRight, Edit2, X, AlertCircle } from 'lucide-react';
+import { Save, Plus, Trash2, ChevronDown, ChevronRight, Edit2, X, AlertCircle, FileDown } from 'lucide-react';
 
 const formatCurrency = (val: number) => val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const INITIAL_FORM = { name: '', type: 'revenue' as TransactionType, specifications: '', orcamento: 0 };
@@ -17,6 +17,7 @@ export default function MonthlyBudgetPage() {
   const [filter, setFilter] = useState<TransactionType>('revenue');
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const [isSaving, setIsSaving] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [manageForm, setManageForm] = useState(INITIAL_FORM);
@@ -37,6 +38,20 @@ export default function MonthlyBudgetPage() {
     await BudgetService.saveBudget(selectedYear, budgetInput);
     setIsSaving(false);
     alert('Orçamento salvo com sucesso!');
+  };
+
+  const handleImportStandardAccounts = async () => {
+    if (window.confirm("Deseja importar o Plano de Contas padrão da IPB? As categorias que já existem não serão duplicadas.")) {
+      setIsImporting(true);
+      try {
+        const addedCount = await BudgetService.importStandardAccounts();
+        alert(`${addedCount} novas categorias foram importadas com sucesso!`);
+      } catch (error) {
+        alert("Erro ao importar o plano de contas padrão.");
+      } finally {
+        setIsImporting(false);
+      }
+    }
   };
 
   const handleInputChange = (cat: string, spec: string, month: string, val: string) => {
@@ -108,6 +123,14 @@ export default function MonthlyBudgetPage() {
             onChange={(e) => setSelectedYear(Number(e.target.value))}
             className="w-20 md:w-24 px-3 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-sky-500 outline-none" 
           />
+          <button 
+            onClick={handleImportStandardAccounts} 
+            disabled={isImporting}
+            className="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg flex justify-center items-center gap-2 text-sm font-medium transition-colors whitespace-nowrap disabled:opacity-70"
+            title="Importar Plano Padrão"
+          >
+            <FileDown size={18} /> <span className="hidden sm:inline">{isImporting ? 'Importando...' : 'Importar Padrão'}</span><span className="sm:hidden">Importar</span>
+          </button>
           <button 
             onClick={() => openModal()} 
             className="flex-1 md:flex-none bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-lg flex justify-center items-center gap-2 text-sm font-medium transition-colors whitespace-nowrap"
@@ -210,6 +233,9 @@ export default function MonthlyBudgetPage() {
                     <div className="flex flex-col items-center gap-2">
                       <AlertCircle size={32} className="opacity-50"/>
                       <p>Nenhuma categoria encontrada.</p>
+                      <button onClick={handleImportStandardAccounts} className="text-indigo-600 font-medium hover:underline mt-2">
+                        Importar Plano de Contas Padrão da IPB
+                      </button>
                     </div>
                   </td>
                 </tr>

@@ -106,7 +106,6 @@ export default function CashBookPage() {
             </div>
           </div>
 
-          {/* FIX DO PDF: Usando inline styles para garantir que o html2canvas renderize a badge corretamente */}
           <div className="flex justify-between items-center bg-slate-100 p-3 rounded border border-slate-200 mb-6 text-[11px] font-medium uppercase tracking-wide">
              <div className="whitespace-nowrap">Ano Anterior: <span className="font-bold text-slate-800 ml-1">{formatCurrency(saldoAnoAnterior)}</span></div>
              <div className="whitespace-nowrap">Mês Anterior: <span className="font-bold text-slate-800 ml-1">{formatCurrency(saldoMesAnterior)}</span></div>
@@ -120,6 +119,7 @@ export default function CashBookPage() {
               <tr className="border-b-2 border-slate-800">
                 <th className="py-2 text-left w-10 font-bold uppercase">Dia</th>
                 <th className="py-2 text-left font-bold uppercase">Histórico / Descrição</th>
+                <th className="py-2 text-left w-20 font-bold uppercase">Método</th>
                 <th className="py-2 text-center w-14 font-bold uppercase">Doc.</th>
                 <th className="py-2 text-right w-24 font-bold uppercase text-rose-800">Débito</th>
                 <th className="py-2 text-right w-24 font-bold uppercase text-emerald-800">Crédito</th>
@@ -135,13 +135,14 @@ export default function CashBookPage() {
                 if (member) desc += ` - ${member}`;
                 if (t.installmentCount && t.installmentCount > 1) desc += ` (${t.installmentNumber}/${t.installmentCount})`;
                 if (acc) desc += ` [${acc.name}]`;
-                
-                if (t.paymentMethod) desc += ` | Pgto: ${t.paymentMethod.toUpperCase()}`;
 
                 return (
                   <tr key={t.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}>
                     <td className="py-2 text-slate-500 font-mono">{format(new Date(t.data), 'dd')}</td>
-                    <td className="py-2 text-slate-800">{desc}</td>
+                    <td className="py-2 text-slate-800 pr-2">{desc}</td>
+                    <td className="py-2 text-slate-600 font-medium text-[10px] uppercase">
+                      {t.paymentMethod}
+                    </td>
                     <td className="py-2 text-center text-[10px]">
                       {t.docId ? <span className="text-slate-900 font-bold">{t.docId}</span> : <span className="text-slate-300">-</span>}
                     </td>
@@ -155,12 +156,12 @@ export default function CashBookPage() {
                 );
               })}
               {transactionsWithDocs.length === 0 && (
-                <tr><td colSpan={5} className="py-8 text-center text-slate-400 italic">Nenhuma movimentação registrada.</td></tr>
+                <tr><td colSpan={6} className="py-8 text-center text-slate-400 italic">Nenhuma movimentação registada.</td></tr>
               )}
             </tbody>
             <tfoot className="border-t-2 border-slate-800 bg-slate-50">
               <tr>
-                <td colSpan={3} className="py-3 text-right font-bold uppercase text-xs pr-4">Totais do Período</td>
+                <td colSpan={4} className="py-3 text-right font-bold uppercase text-xs pr-4">Totais do Período</td>
                 <td className="py-3 text-right font-bold text-rose-700 border-t border-slate-300">{formatCurrency(saidasMes)}</td>
                 <td className="py-3 text-right font-bold text-emerald-700 border-t border-slate-300">{formatCurrency(entradasMes)}</td>
               </tr>
@@ -170,8 +171,8 @@ export default function CashBookPage() {
           {transactionsWithReceipts.length > 0 && (
             <div className="page-break-before mt-8 pt-8 border-t-2 border-dashed border-slate-800">
               <div className="text-center mb-8">
-                <h1 className="text-2xl font-bold uppercase text-slate-900">Anexos e Comprovantes</h1>
-                <p className="text-sm text-slate-500">Documentação comprobatória das movimentações</p>
+                <h1 className="text-2xl font-bold uppercase text-slate-900">Anexos e Comprovativos</h1>
+                <p className="text-sm text-slate-500">Documentação comprovativa das movimentações</p>
               </div>
 
               <div className="grid grid-cols-1 gap-8">
@@ -195,7 +196,7 @@ export default function CashBookPage() {
                     <div className="flex justify-center bg-white border border-slate-200 p-2 rounded">
                       <img 
                         src={t.receiptUrl || undefined} 
-                        alt={`Comprovante ${t.descricao}`} 
+                        alt={`Comprovativo ${t.descricao}`} 
                         className="max-h-[600px] max-w-full object-contain"
                         crossOrigin="anonymous" 
                       />
@@ -207,7 +208,7 @@ export default function CashBookPage() {
           )}
 
           <p className="text-[10px] text-center text-slate-300 mt-8 font-mono break-inside-avoid">
-            Gerado automaticamente pelo Sistema Gestão Financeira em {format(new Date(), 'dd/MM/yyyy HH:mm')}
+            Gerado automaticamente pelo Sistema de Gestão Financeira em {format(new Date(), 'dd/MM/yyyy HH:mm')}
           </p>
 
         </div>
