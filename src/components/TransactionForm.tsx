@@ -3,7 +3,7 @@ import { useFirebaseData } from '../context/FirebaseDataContext';
 import { TransactionService } from '../services/transactionService';
 import { UploadService } from '../services/uploadService';
 import { Transaction, TransactionType, PaymentMethod } from '../types';
-import { Check, Calendar, DollarSign, FileText, Tag, User, CreditCard, Upload, Image as ImageIcon, Loader2, Trash2 } from 'lucide-react';
+import { DollarSign, FileText } from 'lucide-react'; // Importações limpas para evitar erros na Vercel
 
 interface TransactionFormProps {
   selectedMonth: Date;
@@ -14,31 +14,52 @@ interface TransactionFormProps {
 export default function TransactionForm({ selectedMonth, initialData, onSuccess }: TransactionFormProps) {
   const { allChartOfAccounts, allMembers, isLoadingFirebaseData } = useFirebaseData();
   
-  const [descricao, setDescricao] = useState('');
-  const [valor, setValor] = useState('');
   const [tipo, setTipo] = useState<TransactionType>('expense');
   const [categoriaId, setCategoriaId] = useState('');
+  const [subcategoria, setSubcategoria] = useState('');
+  const [descricao, setDescricao] = useState('');
+  const [valor, setValor] = useState('');
   const [membroId, setMembroId] = useState('');
   const [dataTransacao, setDataTransacao] = useState(new Date().toISOString().split('T')[0]);
   const [metodo, setMetodo] = useState<PaymentMethod>('pix');
   const [comprovanteUrl, setComprovanteUrl] = useState('');
+  
   const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Filtra as categorias ativas de acordo com o tipo (receita/despesa)
+  const filteredCategories = allChartOfAccounts.filter(c => c.type === tipo);
+  const selectedCategory = filteredCategories.find(c => c.id === categoriaId);
+  const specs = selectedCategory?.specifications || [];
+
   useEffect(() => {
     if (initialData) {
-      setDescricao(initialData.descricao);
-      setValor(initialData.valor.toString());
       setTipo(initialData.tipo);
       setCategoriaId(initialData.chartOfAccountId);
+      setValor(initialData.valor.toString());
       setMembroId(initialData.memberId || '');
-      // Pega apenas a parte YYYY-MM-DD
       setDataTransacao(new Date(initialData.data).toISOString().split('T')[0]);
       setMetodo(initialData.paymentMethod);
       setComprovanteUrl(initialData.receiptUrl || '');
+
+      // Lógica para separar a subcategoria da descrição ao editar
+      const cat = allChartOfAccounts.find(c => c.id === initialData.chartOfAccountId);
+      let sub = '';
+      let desc = initialData.descricao;
+
+      if (cat && cat.specifications && cat.specifications.length > 0) {
+         const foundSpec = cat.specifications.find(s => initialData.descricao.startsWith(s));
+         if (foundSpec) {
+            sub = foundSpec;
+            // Remove a subcategoria e o hífen da descrição para mostrar só o complemento
+            desc = initialData.descricao.substring(foundSpec.length).replace(/^ \- /, '').trim();
+         }
+      }
+      setSubcategoria(sub);
+      setDescricao(desc);
+
     } else {
         const today = new Date();
-        // Se o mês selecionado for diferente do atual, sugere o dia 1 do mês selecionado
         if (selectedMonth.getMonth() !== today.getMonth()) {
              const year = selectedMonth.getFullYear();
              const month = (selectedMonth.getMonth() + 1).toString().padStart(2, '0');
@@ -47,9 +68,12 @@ export default function TransactionForm({ selectedMonth, initialData, onSuccess 
              setDataTransacao(today.toISOString().split('T')[0]);
         }
     }
-  }, [initialData, selectedMonth]);
+  }, [initialData, selectedMonth, allChartOfAccounts]);
 
-  const filteredCategories = allChartOfAccounts.filter(c => c.type === tipo);
+  const handleCategoriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategoriaId(e.target.value);
+    setSubcategoria(''); // Reseta a subcategoria ao trocar a categoria
+  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -70,23 +94,31 @@ export default function TransactionForm({ selectedMonth, initialData, onSuccess 
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!descricao || !valor || !categoriaId) return alert('Preencha os campos obrigatórios');
+    if (!valor || !categoriaId) return alert('Preencha os campos obrigatórios');
+    if (specs.length > 0 && !subcategoria) return alert('Selecione uma subcategoria');
+
+    // Junta a subcategoria com o complemento (se existir) para salvar no banco
+    let finalDescricao = descricao.trim();
+    if (subcategoria) {
+        finalDescricao = finalDescricao ? `${subcategoria} - ${finalDescricao}` : subcategoria;
+    } else if (!finalDescricao) {
+        return alert('Preencha a descrição da transação');
+    }
 
     setIsSubmitting(true);
     try {
-      // TRUQUE DO FUSO HORÁRIO: Adicionar T12:00:00 para garantir que fique no mesmo dia
       const dateFixed = new Date(`${dataTransacao}T12:00:00`);
 
       const transactionPayload: Omit<Transaction, 'id'> = {
         uid: '', 
-        descricao,
+        descricao: finalDescricao,
         valor: parseFloat(valor.replace(',', '.')),
         tipo,
         fundo: 'caixaGeral',
         chartOfAccountId: categoriaId,
         memberId: membroId || null,
         paymentMethod: metodo,
-        data: dateFixed, // Usando a data corrigida
+        data: dateFixed, 
         dueDate: null,
         status: 'pago',
         receiptUrl: comprovanteUrl || null
@@ -96,8 +128,9 @@ export default function TransactionForm({ selectedMonth, initialData, onSuccess 
         await TransactionService.update(initialData.id, transactionPayload);
       } else {
         await TransactionService.create(transactionPayload);
-        // Limpar form
+        // Limpar form após criar
         setDescricao('');
+        setSubcategoria('');
         setValor('');
         setMembroId('');
         setComprovanteUrl('');
@@ -127,18 +160,48 @@ export default function TransactionForm({ selectedMonth, initialData, onSuccess 
         {/* TIPO */}
         <div className="col-span-2 flex gap-4">
           <label className={`flex-1 cursor-pointer border rounded-xl p-3 flex items-center justify-center gap-2 transition-all ${tipo === 'revenue' ? 'bg-emerald-50 border-emerald-500 text-emerald-700 font-bold' : 'border-slate-200 text-slate-500'}`}>
-            <input type="radio" name="tipo" className="hidden" checked={tipo === 'revenue'} onChange={() => setTipo('revenue')} />
+            <input type="radio" name="tipo" className="hidden" checked={tipo === 'revenue'} onChange={() => { setTipo('revenue'); setCategoriaId(''); setSubcategoria(''); }} />
             <span>Receita</span>
           </label>
           <label className={`flex-1 cursor-pointer border rounded-xl p-3 flex items-center justify-center gap-2 transition-all ${tipo === 'expense' ? 'bg-rose-50 border-rose-500 text-rose-700 font-bold' : 'border-slate-200 text-slate-500'}`}>
-            <input type="radio" name="tipo" className="hidden" checked={tipo === 'expense'} onChange={() => setTipo('expense')} />
+            <input type="radio" name="tipo" className="hidden" checked={tipo === 'expense'} onChange={() => { setTipo('expense'); setCategoriaId(''); setSubcategoria(''); }} />
             <span>Despesa</span>
           </label>
         </div>
 
+        {/* CATEGORIA */}
         <div className="col-span-2 md:col-span-1">
-          <label className="block text-sm font-medium text-slate-700 mb-1">Descrição</label>
-          <input required type="text" value={descricao} onChange={e => setDescricao(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-sky-500" placeholder="Ex: Conta de Luz" />
+          <label className="block text-sm font-medium text-slate-700 mb-1">Categoria Principal</label>
+          <select required value={categoriaId} onChange={handleCategoriaChange} className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white">
+            <option value="">Selecione a categoria...</option>
+            {filteredCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </div>
+
+        {/* SUBCATEGORIA (Condicional) */}
+        {specs.length > 0 && (
+          <div className="col-span-2 md:col-span-1">
+            <label className="block text-sm font-medium text-slate-700 mb-1">Subcategoria</label>
+            <select required value={subcategoria} onChange={e => setSubcategoria(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white">
+              <option value="">Selecione a subcategoria...</option>
+              {specs.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+        )}
+
+        {/* DESCRIÇÃO / COMPLEMENTO */}
+        <div className={`col-span-2 ${specs.length > 0 ? 'md:col-span-2' : 'md:col-span-1'}`}>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            {specs.length > 0 ? 'Complemento / Observação (Opcional)' : 'Descrição / Histórico'}
+          </label>
+          <input 
+            required={specs.length === 0} 
+            type="text" 
+            value={descricao} 
+            onChange={e => setDescricao(e.target.value)} 
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-sky-500" 
+            placeholder={specs.length > 0 ? "Ex: Conta de Janeiro (Opcional)" : "Ex: Conta de Luz"} 
+          />
         </div>
 
         <div className="col-span-2 md:col-span-1">
@@ -147,16 +210,8 @@ export default function TransactionForm({ selectedMonth, initialData, onSuccess 
         </div>
 
         <div className="col-span-2 md:col-span-1">
-          <label className="block text-sm font-medium text-slate-700 mb-1">Categoria</label>
-          <select required value={categoriaId} onChange={e => setCategoriaId(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white">
-            <option value="">Selecione...</option>
-            {filteredCategories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
-        </div>
-
-        <div className="col-span-2 md:col-span-1">
           <label className="block text-sm font-medium text-slate-700 mb-1">Data</label>
-          <input type="date" value={dataTransacao} onChange={e => setDataTransacao(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-sky-500" />
+          <input required type="date" value={dataTransacao} onChange={e => setDataTransacao(e.target.value)} className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:ring-2 focus:ring-sky-500" />
         </div>
 
         <div className="col-span-2 md:col-span-1">
@@ -168,7 +223,7 @@ export default function TransactionForm({ selectedMonth, initialData, onSuccess 
         </div>
 
         <div className="col-span-2 md:col-span-1">
-          <label className="block text-sm font-medium text-slate-700 mb-1">Pagamento</label>
+          <label className="block text-sm font-medium text-slate-700 mb-1">Método de Pagamento</label>
           <select value={metodo} onChange={e => setMetodo(e.target.value as PaymentMethod)} className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white">
             <option value="pix">Pix</option>
             <option value="dinheiro">Dinheiro</option>
@@ -183,7 +238,7 @@ export default function TransactionForm({ selectedMonth, initialData, onSuccess 
           <label className="block text-sm font-medium text-slate-700 mb-2">Comprovante</label>
           <input type="file" accept="image/*" onChange={handleFileChange} className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100 transition-all"/>
           {isUploading && <p className="text-xs text-sky-600 mt-1">Enviando imagem...</p>}
-          {comprovanteUrl && <p className="text-xs text-emerald-600 mt-1">Imagem anexada!</p>}
+          {comprovanteUrl && <p className="text-xs text-emerald-600 mt-1">Imagem anexada com sucesso!</p>}
         </div>
       </div>
 

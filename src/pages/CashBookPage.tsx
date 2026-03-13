@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -6,7 +6,7 @@ import { ptBR } from 'date-fns/locale';
 import html2pdf from 'html2pdf.js';
 import { useFirebaseData } from '../context/FirebaseDataContext';
 import { useCashBook } from '../hooks/useCashBook';
-import { Printer, Calendar, Download } from 'lucide-react';
+import { Calendar, Download } from 'lucide-react';
 
 const formatCurrency = (value: number) => value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -36,15 +36,25 @@ export default function CashBookPage() {
     setLocalSelectedMonth(new Date(y, m-1, 1));
   };
 
-  // Filtrar transações com anexo
-  const transactionsWithReceipts = transactionsInMonth.filter(t => t.receiptUrl);
+  const transactionsWithDocs = useMemo(() => {
+    let docCounter = 1;
+    return transactionsInMonth.map(t => {
+      if (t.receiptUrl) {
+        const docId = `DOC-${String(docCounter).padStart(3, '0')}`;
+        docCounter++;
+        return { ...t, docId };
+      }
+      return { ...t, docId: null };
+    });
+  }, [transactionsInMonth]);
+
+  const transactionsWithReceipts = transactionsWithDocs.filter(t => t.docId !== null);
 
   if (isLoadingFirebaseData) return <div className="p-8 text-center text-slate-500">Gerando livro...</div>;
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-12">
       
-      {/* Barra de Controles */}
       <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 print:hidden">
         <div>
            <h1 className="font-bold text-slate-800">Livro Caixa Mensal</h1>
@@ -67,14 +77,12 @@ export default function CashBookPage() {
         </div>
       </div>
 
-      {/* Área de Impressão */}
-      <div className="flex justify-center">
+      <div className="flex justify-center overflow-x-auto">
         <div 
           ref={reportRef}
-          className="bg-white shadow-2xl border border-slate-200 p-10 w-[210mm] min-h-[297mm] text-slate-900 print:shadow-none print:border-none print:w-full print:p-0 print:m-0"
+          className="bg-white shadow-2xl border border-slate-200 p-8 md:p-10 w-[210mm] min-w-[210mm] min-h-[297mm] text-slate-900 print:shadow-none print:border-none print:w-full print:p-0 print:m-0"
         >
           
-          {/* Cabeçalho */}
           <div className="text-center border-b-2 border-slate-900 pb-4 mb-6">
             <h1 className="text-3xl font-bold uppercase tracking-wide">Livro Caixa</h1>
             <h2 className="text-lg font-medium mt-1 text-slate-700">{process.env.REACT_APP_CHURCH_NAME || "IGREJA DEMONSTRAÇÃO"}</h2>
@@ -83,7 +91,6 @@ export default function CashBookPage() {
             </p>
           </div>
 
-          {/* Resumo */}
           <div className="grid grid-cols-3 gap-0 border border-slate-300 rounded-lg overflow-hidden mb-6 text-sm">
             <div className="p-3 text-center border-r border-slate-300 bg-emerald-50/50">
               <span className="block text-[10px] uppercase font-bold text-emerald-800 tracking-wider">Total Entradas</span>
@@ -94,31 +101,32 @@ export default function CashBookPage() {
               <span className="block text-lg font-bold text-rose-700">{formatCurrency(saidasMes)}</span>
             </div>
             <div className="p-3 text-center bg-slate-50/50">
-              <span className="block text-[10px] uppercase font-bold text-slate-600 tracking-wider">Resultado Mês</span>
+              <span className="block text-[10px] uppercase font-bold text-slate-600 tracking-wider">Saldo do Mês</span>
               <span className={`block text-lg font-bold ${saldoMes >= 0 ? 'text-slate-800' : 'text-rose-600'}`}>{formatCurrency(saldoMes)}</span>
             </div>
           </div>
 
-          {/* Saldos */}
-          <div className="flex justify-between items-center bg-slate-100 p-3 rounded border border-slate-200 mb-6 text-xs font-medium uppercase tracking-wide">
-             <div>Saldo Anterior: <span className="font-bold text-slate-800 ml-1">{formatCurrency(saldoMesAnterior)}</span></div>
-             <div>+ Resultado: <span className="font-bold text-slate-800 ml-1">{formatCurrency(saldoMes)}</span></div>
-             <div className="bg-slate-800 text-white px-2 py-0.5 rounded">A Transportar: <span className="font-bold ml-1">{formatCurrency(saldoATransportar)}</span></div>
+          {/* FIX DO PDF: Usando inline styles para garantir que o html2canvas renderize a badge corretamente */}
+          <div className="flex justify-between items-center bg-slate-100 p-3 rounded border border-slate-200 mb-6 text-[11px] font-medium uppercase tracking-wide">
+             <div className="whitespace-nowrap">Ano Anterior: <span className="font-bold text-slate-800 ml-1">{formatCurrency(saldoAnoAnterior)}</span></div>
+             <div className="whitespace-nowrap">Mês Anterior: <span className="font-bold text-slate-800 ml-1">{formatCurrency(saldoMesAnterior)}</span></div>
+             <div style={{ backgroundColor: '#1e293b', color: '#ffffff', padding: '6px 10px', borderRadius: '4px', whiteSpace: 'nowrap', display: 'inline-block' }}>
+               A Transportar: <span style={{ fontWeight: 'bold', marginLeft: '4px' }}>{formatCurrency(saldoATransportar)}</span>
+             </div>
           </div>
 
-          {/* Tabela */}
           <table className="w-full text-xs border-collapse">
             <thead>
               <tr className="border-b-2 border-slate-800">
-                <th className="py-2 text-left w-12 font-bold uppercase">Dia</th>
+                <th className="py-2 text-left w-10 font-bold uppercase">Dia</th>
                 <th className="py-2 text-left font-bold uppercase">Histórico / Descrição</th>
-                <th className="py-2 text-center w-10 font-bold uppercase">Doc.</th>
+                <th className="py-2 text-center w-14 font-bold uppercase">Doc.</th>
                 <th className="py-2 text-right w-24 font-bold uppercase text-rose-800">Débito</th>
                 <th className="py-2 text-right w-24 font-bold uppercase text-emerald-800">Crédito</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
-              {transactionsInMonth.map((t, idx) => {
+              {transactionsWithDocs.map((t, idx) => {
                 const acc = allChartOfAccounts.find(a => a.id === t.chartOfAccountId);
                 const isRev = acc?.type === 'revenue';
                 const member = allMembers.find(m => m.id === t.memberId)?.name;
@@ -127,13 +135,15 @@ export default function CashBookPage() {
                 if (member) desc += ` - ${member}`;
                 if (t.installmentCount && t.installmentCount > 1) desc += ` (${t.installmentNumber}/${t.installmentCount})`;
                 if (acc) desc += ` [${acc.name}]`;
+                
+                if (t.paymentMethod) desc += ` | Pgto: ${t.paymentMethod.toUpperCase()}`;
 
                 return (
                   <tr key={t.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}>
                     <td className="py-2 text-slate-500 font-mono">{format(new Date(t.data), 'dd')}</td>
                     <td className="py-2 text-slate-800">{desc}</td>
                     <td className="py-2 text-center text-[10px]">
-                      {t.receiptUrl ? <span className="text-slate-900 font-bold">SIM</span> : <span className="text-slate-300">-</span>}
+                      {t.docId ? <span className="text-slate-900 font-bold">{t.docId}</span> : <span className="text-slate-300">-</span>}
                     </td>
                     <td className="py-2 text-right font-medium text-rose-700">
                       {!isRev ? formatCurrency(t.valor) : ''}
@@ -144,7 +154,7 @@ export default function CashBookPage() {
                   </tr>
                 );
               })}
-              {transactionsInMonth.length === 0 && (
+              {transactionsWithDocs.length === 0 && (
                 <tr><td colSpan={5} className="py-8 text-center text-slate-400 italic">Nenhuma movimentação registrada.</td></tr>
               )}
             </tbody>
@@ -157,19 +167,6 @@ export default function CashBookPage() {
             </tfoot>
           </table>
 
-          {/* Footer Assinaturas */}
-          <div className="mt-16 mb-8 pt-8 border-t border-slate-200 grid grid-cols-2 gap-16 text-center break-inside-avoid">
-             <div>
-               <div className="border-t border-slate-400 w-full mb-2"></div>
-               <p className="text-xs font-bold uppercase text-slate-600">Tesoureiro Responsável</p>
-             </div>
-             <div>
-               <div className="border-t border-slate-400 w-full mb-2"></div>
-               <p className="text-xs font-bold uppercase text-slate-600">Pastor / Presidente</p>
-             </div>
-          </div>
-
-          {/* SEÇÃO DE ANEXOS */}
           {transactionsWithReceipts.length > 0 && (
             <div className="page-break-before mt-8 pt-8 border-t-2 border-dashed border-slate-800">
               <div className="text-center mb-8">
@@ -178,11 +175,13 @@ export default function CashBookPage() {
               </div>
 
               <div className="grid grid-cols-1 gap-8">
-                {transactionsWithReceipts.map((t, idx) => (
+                {transactionsWithReceipts.map((t) => (
                   <div key={t.id} className="border border-slate-300 rounded-lg p-4 bg-slate-50 break-inside-avoid shadow-sm">
                     <div className="flex justify-between items-start border-b border-slate-300 pb-2 mb-4">
                       <div>
-                        <span className="text-[10px] font-bold text-slate-500 uppercase bg-slate-200 px-2 py-0.5 rounded">Comprovante #{idx + 1}</span>
+                        <span className="text-[10px] font-bold text-slate-500 uppercase bg-slate-200 px-2 py-0.5 rounded">
+                          Anexo {t.docId}
+                        </span>
                         <p className="font-bold text-slate-900 text-lg mt-1">{t.descricao}</p>
                         <p className="text-xs text-slate-500">{format(new Date(t.data), 'dd/MM/yyyy')} • {t.paymentMethod.toUpperCase()}</p>
                       </div>
@@ -194,7 +193,6 @@ export default function CashBookPage() {
                     </div>
                     
                     <div className="flex justify-center bg-white border border-slate-200 p-2 rounded">
-                      {/* CORREÇÃO DO ERRO DE TIPO AQUI: receiptUrl || undefined */}
                       <img 
                         src={t.receiptUrl || undefined} 
                         alt={`Comprovante ${t.descricao}`} 
